@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zerio Command</title>
+    <!-- Добавляем favicon -->
+    <link rel="icon" href="https://i.postimg.cc/XqcpH1Nh/ZC.png">
+
+    <style>
+        /* Стили для начального экрана */
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+
+            /* Отключение выделения текста (пункт 2) */
+            user-select: none;
+            -webkit-user-select: none; /* Для Safari */
+        }
+
+        /* Контейнер для анимации ZC */
+        .loading-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 100px;
+            font-weight: bold;
+        }
+
+        .letter {
+            opacity: 0;
+            animation: fadeIn 1s forwards;
+        }
+
+        .letter:nth-child(2) {
+            animation-delay: 1s; /* Вторая буква появится через 1 секунду */
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Основной контент после загрузки */
+        #main-content {
+            display: none; /* Сначала скрыт */
+            text-align: center;
+            font-size: 24px;
+            color: white;
+        }
+
+        /* Анимация затухания начального экрана */
+        .fade-out {
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        /* Постепенное появление текста */
+        .fade-in-text h1,
+        .fade-in-text p {
+            opacity: 0;
+            transform: translateY(20px); /* Начальное смещение вниз */
+            transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+        }
+
+        .fade-in-text h1 {
+            animation: fadeInLine 1s forwards;
+        }
+
+        .fade-in-text p {
+            animation: fadeInLine 1s forwards;
+            animation-delay: 1s; /* Задержка для второй строки */
+        }
+
+        @keyframes fadeInLine {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Правовая защита (пункт 10) */
+        .copyright {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.5);
+            pointer-events: none; /* Защита от выделения */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Начальный экран с анимацией ZC -->
+    <div class="loading-container">
+        <div class="letter">Z</div>
+        <div class="letter">C</div>
+    </div>
+
+    <!-- Основной контент после загрузки -->
+    <div id="main-content">
+        <div class="fade-in-text">
+            <h1>Добро пожаловать!</h1>
+            <p>Скоро здесь что-то будет...</p>
+        </div>
+        <!-- Правовая защита (пункт 10) -->
+        <p class="copyright">© 2025 Zerio Command. Все права защищены.</p>
+    </div>
+
+    <script>
+        // JavaScript для управления анимацией и переходом
+        setTimeout(() => {
+            const loadingContainer = document.querySelector('.loading-container');
+            const mainContent = document.getElementById('main-content');
+
+            // Плавное затухание начального экрана
+            loadingContainer.classList.add('fade-out');
+
+            // После завершения анимации затухания
+            setTimeout(() => {
+                loadingContainer.style.display = 'none'; // Убираем начальный экран
+                mainContent.style.display = 'block'; // Показываем основной контент
+            }, 1000); // Время затухания (1 секунда)
+        }, 5000); // 5000 миллисекунд = 5 секунд
+
+        // Отключение правой кнопки мыши (пункт 1)
+        document.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+        });
+    </script>
+</body>
+</html>
