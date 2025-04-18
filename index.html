@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Zerio Command - создание игр, программ и плагинов">
+    <meta property="og:image" content="https://i.postimg.cc/XqcpH1Nh/ZC.png">
     <title>Zerio Command</title>
     <link rel="icon" href="https://i.postimg.cc/XqcpH1Nh/ZC.png">
     <style>
@@ -23,6 +25,41 @@
             touch-action: manipulation;
         }
         
+        .maintenance-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #121212;
+            z-index: 2000;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .maintenance-content {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            max-width: 800px;
+        }
+        
+        .maintenance-text {
+            font-size: clamp(24px, 5vw, 36px);
+            margin-bottom: 20px;
+        }
+        
+        .maintenance-image {
+            width: 150px;
+            height: 150px;
+            object-fit: contain;
+            transform: translateZ(0);
+        }
+        
         .loading-screen {
             position: fixed;
             top: 0;
@@ -34,17 +71,20 @@
             align-items: center;
             background-color: #121212;
             z-index: 1000;
+            transform: translateZ(0);
         }
         
         .loading-container {
             display: flex;
             font-size: min(15vw, 100px);
             font-weight: bold;
+            transform: translateZ(0);
         }
         
         .letter {
             opacity: 0;
             animation: fadeIn 1s forwards;
+            will-change: opacity, transform;
         }
         
         .letter:nth-child(2) {
@@ -59,21 +99,14 @@
         .fade-out {
             opacity: 0;
             transition: opacity 1s ease-in-out;
+            will-change: opacity;
         }
         
         #main-content {
             display: none;
             height: 100%;
-        }
-        
-        #background-video {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            z-index: -1;
+            position: relative;
+            padding-bottom: 40px;
         }
         
         .overlay {
@@ -84,18 +117,21 @@
             height: 100%;
             background-color: rgba(0, 0, 0, 0.7);
             z-index: -1;
+            transform: translateZ(0);
         }
         
         .main-interface {
             position: absolute;
-            top: 0;
+            top: 10%;
             left: 0;
             width: 100%;
-            height: 100%;
+            height: calc(90% - 40px);
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-start;
             align-items: center;
+            padding-top: 5vh;
+            transform: translateZ(0);
         }
         
         #back-button {
@@ -112,6 +148,7 @@
             display: none;
             z-index: 100;
             border-radius: 5px;
+            transform: translateZ(0);
         }
         
         #back-button:hover {
@@ -122,10 +159,12 @@
             text-align: center;
             font-size: clamp(30px, 8vw, 100px);
             color: white;
-            margin-bottom: 10vh;
+            margin-bottom: 5vh;
             opacity: 0;
             animation: fadeText 3s infinite;
             padding: 0 20px;
+            will-change: opacity;
+            transform: translateZ(0);
         }
         
         @keyframes fadeText {
@@ -139,6 +178,8 @@
             gap: 15px;
             width: 80%;
             max-width: 400px;
+            margin-top: 2vh;
+            transform: translateZ(0);
         }
         
         .button {
@@ -151,6 +192,7 @@
             transition: all 0.3s ease;
             border-radius: 5px;
             width: 100%;
+            transform: translateZ(0);
         }
         
         .button:hover {
@@ -163,7 +205,7 @@
             top: 100%;
             left: 0;
             width: 100%;
-            background-color: transparent;
+            background-color: rgba(18, 18, 18, 0.9);
             z-index: 1001;
             border-radius: 5px;
             overflow: hidden;
@@ -171,6 +213,8 @@
             transform: scaleY(0);
             transform-origin: top;
             transition: all 0.3s ease;
+            will-change: transform, opacity;
+            backdrop-filter: blur(5px);
         }
         
         .dropdown-content.show {
@@ -189,11 +233,11 @@
             font-size: clamp(14px, 4vw, 16px);
             border: 2px solid white;
             border-top: none;
-            background-color: #121212;
+            background-color: transparent;
         }
         
         .dropdown-content li:hover {
-            background-color: #333333;
+            background-color: rgba(51, 51, 51, 0.5);
         }
         
         .dropdown-container {
@@ -201,59 +245,243 @@
             margin-top: 15px;
         }
         
-        .dropdown-container:hover .dropdown-content {
-            display: block;
-            opacity: 1;
-            transform: scaleY(1);
-        }
-        
         .content-block {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 90%;
+            top: 0;
+            left: 10%;
+            width: 80%;
             max-width: 800px;
-            text-align: center;
+            text-align: left;
             display: none;
             padding: 20px;
+            min-height: calc(100% - 60px);
         }
         
         .content-block h2 {
-            font-size: clamp(24px, 6vw, 48px);
+            font-size: clamp(24px, 6vw, 36px);
             margin-bottom: 20px;
         }
         
         .content-block p {
-            font-size: clamp(16px, 4vw, 24px);
+            font-size: clamp(14px, 3vw, 18px);
             line-height: 1.5;
+            margin-bottom: 20px;
+        }
+        
+        .content-block .link-button {
+            display: inline-block;
+            background-color: transparent;
+            border: 2px solid #4dabf7;
+            color: #4dabf7;
+            font-size: clamp(14px, 3vw, 18px);
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-bottom: 20px;
+        }
+        
+        .content-block .link-button:hover {
+            background-color: rgba(77, 171, 247, 0.1);
+            color: #74c0fc;
+            text-decoration: none;
+        }
+        
+        .additional-text-line {
+            font-size: clamp(14px, 3vw, 16px);
+            line-height: 1.5;
+            margin-bottom: 8px;
+            text-align: left;
+        }
+        
+        .project-navigation {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        .nav-button {
+            background-color: transparent;
+            border: 2px solid white;
+            color: white;
+            padding: 8px 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: clamp(14px, 3vw, 16px);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-button:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .project-counter {
+            text-align: center;
+            font-size: clamp(14px, 3vw, 16px);
+            margin-top: 10px;
         }
         
         .copyright {
             position: fixed;
             bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
+            left: 0;
+            right: 0;
+            text-align: center;
             font-size: clamp(10px, 2vw, 12px);
             color: rgba(255, 255, 255, 0.5);
-            width: 100%;
-            text-align: center;
             padding: 0 20px;
+            z-index: 1000;
         }
         
         @media (max-height: 500px) {
             .dynamic-text {
-                margin-bottom: 5vh;
+                margin-bottom: 3vh;
                 font-size: clamp(20px, 6vw, 30px);
             }
             
             .buttons-container {
                 gap: 10px;
+                margin-top: 1vh;
+            }
+            
+            .main-interface {
+                top: 5%;
+                height: calc(95% - 40px);
+            }
+            
+            .additional-text-line {
+                font-size: clamp(12px, 3vw, 14px);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .maintenance-content {
+                flex-direction: column;
+            }
+            
+            .maintenance-image {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .content-block {
+                left: 5%;
+                width: 90%;
             }
         }
     </style>
 </head>
 <body>
+    <script>
+        const isSiteAvailable = true;
+        let currentProjectIndex = 0;
+        
+        const projects = [
+            {
+                title: "Программа проверки на читы для CS GO",
+                link: "https://github.com/ZerioCommand/LuxeCheckerCS2",
+                linkText: "Скачать и протестировать",
+                additionalTexts: [
+                    "<b>-Раздел Папки в нем AppData, Temp, Recent, Prefetch<b>",
+                    "<b>-Раздел Сайты открывает популярные сайты читов<b>",
+                    "<b>-Раздел О системе Информация о Видеокарте,Оператитвной памяти,Мониторов кол-во,также Walper Engine и Fences<b>",
+                    "<b>-Раздел Дополнительно Редактор реестра ключи Программы и компоненты также текст для почт<b>",
+                    "<b>-Раздел Hist Prog история выполнявщихся процессов и выполнявшихся<b>",
+                    "<b>-Раздел Программы соответсвенно сторонние программы<b>",
+                    "<b>-Раздел О программе Соц.сети и на покушать также можно проверить обновления<b>",
+                    "<hr>",
+                    "<h3><i>О Системе🛠</i></h3>",
+                    "<b>ОС:</b> Windows",
+                    "<b>Место на диске:</b> 120мб",
+                    "<b>Языки:</b> Русский,Англиский",
+                    "<b>Сеть:</b>Широкополосное подключение к интернету",
+                    "<hr>",
+                    "<h3><i>Будет реализовано🛠</i></h3>",
+                    "<i><strong>Steam Api<strong></i>",
+                    "<strong>Будет добавляться...<strong>"
+                ]
+            },
+            {
+                title: "Скоро",
+                description: "Скор",
+                link: "Скоро",
+                linkText: "Скоро",
+                additionalTexts: [
+                    
+                ]
+            },
+            {
+                title: "Скоро",
+                description: "Скоро",
+                link: "Скоро",
+                linkText: "Скоро",
+                additionalTexts: [
+                    
+                ]
+            },
+            {
+                title: "Скоро",
+                description: "Скоро",
+                link: "Скоро",
+                linkText: "Скоро",
+                additionalTexts: [
+                
+                ]
+            },
+            {
+                title: "Скоро",
+                description: "Скоро",
+                link: "Скоро",
+                linkText: "Скоро",
+                additionalTexts: [
+                    
+                ]
+            },
+            {
+                title: "Скоро",
+                description: "Скоро",
+                link: "Скоро",
+                linkText: "Скоро",
+                additionalTexts: [
+                    
+                ]
+            },
+            {
+                title: "Скоро",
+                description: "Скоро",
+                link: "Скоро",
+                linkText: "Скоро",
+                additionalTexts: [
+                    
+                ]
+            }
+        ];
+
+        function updateProjectCounter() {
+            const counter = document.getElementById('project-counter');
+            if (counter) {
+                counter.textContent = `${currentProjectIndex + 1} / ${projects.length}`;
+            }
+        }
+    </script>
+    
+    <div class="maintenance-screen" id="maintenance-screen" style="display: none;">
+        <div class="maintenance-content">
+            <div>
+                <div class="maintenance-text">Сайт на технических работах</div>
+                <p>Мы работаем над улучшением сайта. Скоро вернемся!</p>
+            </div>
+            <img src="https://i.postimg.cc/T3ZNTbjC/56.png" alt="Технические работы" class="maintenance-image">
+        </div>
+    </div>
+    
     <div class="loading-screen" id="loading-screen">
         <div class="loading-container">
             <div class="letter">Z</div>
@@ -262,61 +490,76 @@
     </div>
     
     <div id="main-content">
-        <video id="background-video" autoplay muted loop>
-            <source src="https://dl.dropboxusercontent.com/s/q2atq0k4ghou72wy4tzwr/mixkit-stars-in-space-background-1610-4k.mp4?rlkey=fjd5rem01pwbctx01ktfnpe02&st=7pzi2nob&dl=0" type="video/mp4">
-        </video>
         <div class="overlay"></div>
         
-        <button id="back-button" onclick="goBack()">Назад</button>
+        <button id="back-button" onclick="goBack()" aria-label="Назад">Назад</button>
         
         <div class="main-interface" id="main-interface">
             <div class="dynamic-text" id="dynamic-text"></div>
             
             <div class="buttons-container">
-                <button class="button" onclick="showAbout()">О нас</button>
-                <div class="dropdown-container">
-                    <button class="button" onclick="toggleDropdown()">Проекты ▼</button>
-                    <ul class="dropdown-content" id="project-dropdown">
-                        <li onclick="selectProject('Проект 1', 'Скоро')">Проект 1</li>
-                        <li onclick="selectProject('Проект 2', 'Скоро')">Проект 2</li>
-                        <li onclick="selectProject('Проект 3', 'Скоро')">Проект 3</li>
-                        <li onclick="selectProject('Проект 4', 'Скоро')">Проект 4</li>
-                        <li onclick="selectProject('Проект 5', 'Скоро')">Проект 5</li>
+                <button class="button" onclick="showAbout()" aria-label="О нас">О нас</button>
+                <div class="dropdown-container" id="dropdown-container">
+                    <button class="button" onclick="toggleDropdown()" aria-label="Проекты" aria-expanded="false" aria-haspopup="true">Проекты ▼</button>
+                    <ul class="dropdown-content" id="project-dropdown" role="menu">
+                        <li role="menuitem" onclick="selectProject(0)">LuxeChecker</li>
+                        <li role="menuitem" onclick="selectProject(1)">Скоро</li>
+                        <li role="menuitem" onclick="selectProject(2)">Скоро</li>
+                        <li role="menuitem" onclick="selectProject(3)">Скоро</li>
+                        <li role="menuitem" onclick="selectProject(4)">Скоро</li>
+                        <li role="menuitem" onclick="selectProject(5)">Скоро</li>
+                        <li role="menuitem" onclick="selectProject(6)">Скоро</li>
                     </ul>
                 </div>
             </div>
-            
-            <p class="copyright">© 2025 Zerio Command. Все права защищены.</p>
         </div>
         
         <div class="content-block" id="project-info">
             <h2 id="project-title"></h2>
             <p id="project-description"></p>
+            <a href="#" id="project-link" class="link-button" target="_blank"></a>
+            <div id="project-additional-texts"></div>
+            
+            <div class="project-navigation">
+                <button class="nav-button" id="prev-project" onclick="navigateProject(-1)" disabled>« Назад</button>
+                <button class="nav-button" id="next-project" onclick="navigateProject(1)">Вперед »</button>
+            </div>
+            <div class="project-counter" id="project-counter"></div>
         </div>
         
         <div class="content-block" id="about-info">
             <h2>О нас</h2>
-            <p>Скоро</p>
+            <p>Zerio Command - мы команда людей, создающих игры, программы и плагины. Мы специализируемся на разработке, инструментов, локализации и модификации игр.</p>
+            <p>Наша миссия - сделать игр доступными для всех и помочь игрокам наслаждаться играми на родном языке.</p>
+            <a href="Скоро" class="link-button" target="_blank">Скоро</a>
         </div>
+        
+        <p class="copyright">© 2025 Zerio Command. Все права защищены.</p>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            setTimeout(() => {
-                const loadingScreen = document.getElementById('loading-screen');
-                const mainContent = document.getElementById('main-content');
-                
-                loadingScreen.classList.add('fade-out');
-                
+        if (!isSiteAvailable) {
+            document.getElementById('maintenance-screen').style.display = 'flex';
+            document.getElementById('loading-screen').style.display = 'none';
+            document.getElementById('main-content').style.display = 'none';
+        } else {
+            document.addEventListener('DOMContentLoaded', () => {
                 setTimeout(() => {
-                    loadingScreen.style.display = 'none';
-                    mainContent.style.display = 'block';
+                    const loadingScreen = document.getElementById('loading-screen');
+                    const mainContent = document.getElementById('main-content');
                     
-                    document.getElementById('main-interface').style.display = 'flex';
-                    startDynamicText();
-                }, 1000);
-            }, 3000);
-        });
+                    loadingScreen.classList.add('fade-out');
+                    
+                    setTimeout(() => {
+                        loadingScreen.style.display = 'none';
+                        mainContent.style.display = 'block';
+                        
+                        document.getElementById('main-interface').style.display = 'flex';
+                        startDynamicText();
+                    }, 1000);
+                }, 2000);
+            });
+        }
         
         document.addEventListener('contextmenu', (e) => e.preventDefault());
         
@@ -324,7 +567,8 @@
         const dynamicTexts = [
             "Делаем игры",
             "Пишем переводы",
-            "Создаем программы"
+            "Создаем программы",
+            "Пишем плагины"
         ];
         let currentTextIndex = 0;
         
@@ -345,48 +589,110 @@
        
         function toggleDropdown() {
             const dropdown = document.getElementById('project-dropdown');
-            dropdown.classList.toggle('show');
+            const isExpanded = dropdown.classList.toggle('show');
+            document.querySelector('#dropdown-container button').setAttribute('aria-expanded', isExpanded);
         }
         
-        function selectProject(title, description) {
+        function selectProject(index) {
+            currentProjectIndex = index;
             stopDynamicText();
             
             document.getElementById('main-interface').style.display = 'none';
             
-            document.getElementById('project-title').textContent = title;
-            document.getElementById('project-description').textContent = description;
-            document.getElementById('project-info').style.display = 'block';
+            const project = projects[index];
+            document.getElementById('project-title').textContent = project.title;
             
+            const description = document.getElementById('project-description');
+            if (project.description) {
+                description.textContent = project.description;
+                description.style.display = 'block';
+            } else {
+                description.style.display = 'none';
+            }
+            
+            const link = document.getElementById('project-link');
+            link.href = project.link;
+            link.textContent = project.linkText;
+            
+            const container = document.getElementById('project-additional-texts');
+            container.innerHTML = '';
+            
+            project.additionalTexts.forEach(text => {
+                const p = document.createElement('div');
+                p.className = 'additional-text-line';
+                p.innerHTML = text;
+                container.appendChild(p);
+            });
+            
+            document.getElementById('project-info').style.display = 'block';
             document.getElementById('back-button').style.display = 'block';
+            
+            // Update navigation buttons state
+            document.getElementById('prev-project').disabled = index === 0;
+            document.getElementById('next-project').disabled = index === projects.length - 1;
+            
+            updateProjectCounter();
+            
+            document.getElementById('project-dropdown').classList.remove('show');
+            document.querySelector('#dropdown-container button').setAttribute('aria-expanded', 'false');
+        }
+        
+        function navigateProject(direction) {
+            const newIndex = currentProjectIndex + direction;
+            if (newIndex >= 0 && newIndex < projects.length) {
+                selectProject(newIndex);
+            }
         }
         
         function showAbout() {
             stopDynamicText();
             
             document.getElementById('main-interface').style.display = 'none';
-            
             document.getElementById('about-info').style.display = 'block';
-            
             document.getElementById('back-button').style.display = 'block';
         }
         
         function goBack() {
             document.getElementById('project-info').style.display = 'none';
             document.getElementById('about-info').style.display = 'none';
-
             document.getElementById('main-interface').style.display = 'flex';
-            
             document.getElementById('back-button').style.display = 'none';
-             
             startDynamicText();
         }
         
-        const dropdownContainer = document.querySelector('.dropdown-container');
+        document.addEventListener('click', (e) => {
+            const dropdownContainer = document.getElementById('dropdown-container');
+            const dropdownButton = dropdownContainer.querySelector('button');
+            const dropdown = document.getElementById('project-dropdown');
+            
+            if (!dropdownContainer.contains(e.target)) {
+                dropdown.classList.remove('show');
+                dropdownButton.setAttribute('aria-expanded', 'false');
+            }
+        });
+        
+        const dropdownContainer = document.getElementById('dropdown-container');
         const dropdown = document.getElementById('project-dropdown');
+        
+        dropdownContainer.addEventListener('mouseenter', () => {
+            dropdown.classList.add('show');
+            dropdownContainer.querySelector('button').setAttribute('aria-expanded', 'true');
+        });
         
         dropdownContainer.addEventListener('mouseleave', () => {
             dropdown.classList.remove('show');
+            dropdownContainer.querySelector('button').setAttribute('aria-expanded', 'false');
         });
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                dropdown.classList.remove('show');
+                dropdownContainer.querySelector('button').setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        // Initialize project counter
+        updateProjectCounter();
     </script>
 </body>
 </html>
